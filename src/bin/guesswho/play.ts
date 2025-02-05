@@ -6,7 +6,8 @@ async function main() {
     const board = await readBoard();
     const game = new GuessWho(board);
     await game.init();
-    await game.turn();
+    const result = await game.run();
+    console.log(result);
 }
 
 main().catch(console.error);
