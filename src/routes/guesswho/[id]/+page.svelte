@@ -16,6 +16,8 @@
     // State in two variables to make reactivity easier
     let playerAState = $state(Set<string>([data.playerACard]));
     let playerBState = $state(Set<string>([data.playerBCard]));
+    let playerAStateHistory: Array<Set<string>> = [Set<string>([data.playerACard])];
+    let playerBStateHistory: Array<Set<string>> = [Set<string>([data.playerBCard])];
 
     console.log(data);
 
@@ -43,7 +45,6 @@
                 player: "Referee",
                 position: "Referee",
                 content: "Starting a new match!<br /><b>" + data.playerA + "</b> vs <b>" + data.playerB + "</b>",
-                state: undefined,
             });
         }
 
@@ -51,14 +52,12 @@
             player: turnData.playerID,
             position: positionPlayer,
             content: turnData.playerQuestion,
-            state: undefined,
         });
 
         turnMessages.push({
             player: other + " <span class='text-xs'>(via Referee)</span>",
             position: positionOther,
             content: turnData.refereeAnswer ? "Yes" : "No",
-            state: undefined,
         });        
 
         // update state
@@ -75,23 +74,24 @@
             player: turnData.playerID,
             position: positionPlayer,
             content: "Removing " + diff.join(", "),
-            state: turnData.playerUpdatedState,
         });
 
         // force render
         if (turnData.playerID == data.playerA) {
             playerAState = playerState;
-            console.log(playerAState);
         } else {
             playerBState = playerState;
         }
+
+        // push state history as a pair to simplify step back
+        playerAStateHistory.push(playerAState);
+        playerBStateHistory.push(playerBState);
 
         if (turn == data.turns.length - 1) {
             turnMessages.push({
                 player: "Referee",
                 position: "Referee",
                 content: "Finished match: " + data.result.winner + " won with reason " + data.result.reason,
-                state: undefined,
             });
         }
 
@@ -110,8 +110,23 @@
 
     function handleStep() {
         handlePause();
-        if (turn < data.turns.length - 1) {
+        if (turn < data.turns.length) {
             step();
+        }
+    }
+
+    function handleStepBack() {
+        handlePause();
+        if (turn > 0) {
+            turn -= 1;
+            // remove last turn images
+            const addedMessages = messagesByTurn[messagesByTurn.length-1].length;
+            messages = messages.slice(0, messages.length - addedMessages);
+            messagesByTurn.pop();
+            playerAStateHistory.pop();
+            playerAState = playerAStateHistory[playerAStateHistory.length-1];
+            playerBStateHistory.pop();
+            playerBState = playerBStateHistory[playerBStateHistory.length-1];
         }
     }
 
@@ -126,7 +141,7 @@
 
 <div class="flex flex-1">
     <!-- Chat Section (1/3 of the page) -->
-    <Chat {messages} {handlePlay} {handleStep} {handlePause} />
+    <Chat {messages} {handlePlay} {handleStepBack} {handleStep} {handlePause} />
     
     <!-- Main Content (Black Background) -->
     <div class="flex-1 bg-gray-400 text-white p-4">

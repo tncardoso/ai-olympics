@@ -4,5 +4,4 @@ export interface Message {
     player: string;
     position: "A" | "B" | "Referee";
     content: string;
-    state: PersonState[] | undefined
 }

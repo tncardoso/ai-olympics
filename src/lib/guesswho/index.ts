@@ -4,11 +4,14 @@ import { openai } from "@ai-sdk/openai";
 import { createCanvas, Image, loadImage } from "@napi-rs/canvas";
 import { z } from "zod";
 import type { BoardDescription, PersonDescription } from "./model";
+import type { Replay, ReplayTurn, GameResult } from "./replay";
 import { Referee } from "./referee";
 import { BoardState, type PersonState } from "./board";
 import { Agent } from "./agent";
 import { List } from "immutable";
 import crypto from "crypto";
+import { anthropic } from "@ai-sdk/anthropic";
+import { google } from '@ai-sdk/google';
 
 function getRandomInt(max: number): number {
     return Math.floor(Math.random() * max);
@@ -22,30 +25,6 @@ function getRandomCards(max: number): [number, number] {
         cardB = getRandomInt(max);
     } while (cardA == cardB);
     return [cardA, cardB];
-}
-
-interface GameResult {
-    winner: string;
-    reason: "WIN" | "WRONG_GUESS" | "MAX_TURNS_REACHED";
-}
-
-export interface ReplayTurn {
-    playerID: string;
-    playerQuestion: string;
-    refereeAnswer: boolean;
-    playerUpdatedState: List<PersonState>;
-}
-
-export interface Replay {
-    id: string;
-    date: Date;
-    board: BoardDescription,
-    playerA: string;
-    playerB: string;
-    playerACard: string;
-    playerBCard: string;
-    result: GameResult;
-    turns: ReplayTurn[];
 }
 
 export class GuessWho {
@@ -66,7 +45,9 @@ export class GuessWho {
 
         // create a referee with multiple models to vote
         this.referee = new Referee([
-            openai("gpt-4o-mini"),
+            openai("gpt-4o"),
+            anthropic("claude-3-5-sonnet-20241022"),
+            google("gemini-2.0-flash-exp"),
         ]);
 
         this.playerA = playerA;
@@ -119,7 +100,7 @@ export class GuessWho {
     }
 
     async run(): Promise<Replay> {
-        const MAX_TURNS = 20;
+        const MAX_TURNS = 24;
 
         let result: GameResult | null = null;
         for (var i = 0; i < MAX_TURNS; i++) {
@@ -159,9 +140,11 @@ export class GuessWho {
         }
 
         const date = new Date();
-        const sha1 = crypto.createHash("sha1");
-        sha1.update(date.toISOString());
-        const id = sha1.digest("hex");
+        const id = date.toISOString()
+        .replace("T","-")
+        .replaceAll(":","-")
+        .substring(0, 19)
+        .replaceAll("-", "");
         const replay: Replay = {
             id: id,
             date: date,

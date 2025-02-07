@@ -1,6 +1,6 @@
 import * as fs from "fs";
 import { Rating, rate_1vs1 } from "ts-trueskill";
-import { type Replay } from "$lib/guesswho";
+import { type Replay } from "$lib/guesswho/replay";
 import { type Ranking, type RankingEntry, GuessWhoStats } from "$lib/ranking";
 
 async function computeRanking() {
@@ -18,12 +18,15 @@ async function computeRanking() {
         }
     }
     
+    const replays = [];
     const files = await fs.promises.readdir(dir);
     for (const file of files) {
         if (file.endsWith('.json')) {
             const filename = `${dir}/${file}`;
             const data = await fs.promises.readFile(filename, 'utf-8');
             const replay = JSON.parse(data) as Replay;
+            replay.date = new Date(replay.date);
+            replays.push(replay);
 
             const playerA = replay.playerA;
             const playerB = replay.playerB;
@@ -43,18 +46,18 @@ async function computeRanking() {
                 ratings.set(playerB, playerBNewRating);
                 playerAStats.playerAWins += 1;
                 playerAStats.wins += 1;
-                playerAStats.playerAMatches += 1;
             } else if (winner == playerB) {
                 const [playerBNewRating, playerANewRating] = rate_1vs1(playerBRating!, playerARating!);
                 ratings.set(playerA, playerANewRating);
                 ratings.set(playerB, playerBNewRating);
                 playerBStats.playerBWins += 1;
                 playerBStats.wins += 1;
-                playerBStats.playerBMatches += 1;
             }
 
+            playerAStats.playerAMatches += 1;
             playerAStats.matches += 1;
             playerAStats.averageTurns += replay.turns.length;
+            playerBStats.playerBMatches += 1;
             playerBStats.matches += 1;
             playerBStats.averageTurns += replay.turns.length;
         }
@@ -80,9 +83,12 @@ async function computeRanking() {
 
     //Sort ranking
     ranking.ranking.sort((a, b) => b.ranking - a.ranking);
+    fs.writeFile("static/guesswho/ranking.json", JSON.stringify(ranking), console.error);
     console.log(ranking);
 
-    fs.writeFile("static/guesswho/ranking.json", JSON.stringify(ranking), console.error);
+    replays.sort((a, b) => b.date.getTime() - a.date.getTime());
+    replays.map((replay) => { replay.turns = []; replay.board = {people: []}; })
+    fs.writeFile("static/guesswho/replays.json", JSON.stringify({replays: replays}), console.error);
 }
 
 // Read all replay information and compute final ranking
