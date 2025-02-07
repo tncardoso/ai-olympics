@@ -70,6 +70,7 @@ export class Referee {
                 if (this.models.length > 1) {
                     console.log("referee yes votes = " + votesYes);
                 }
+
                 resolve(votesYes > (this.models.length / 2));
             } else {
                 reject("Invalid card image");

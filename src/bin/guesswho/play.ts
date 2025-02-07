@@ -6,12 +6,15 @@ import { BoardState } from "$lib/guesswho/board";
 import type { LanguageModel } from "ai";
 import { openai } from "@ai-sdk/openai";
 import { anthropic } from "@ai-sdk/anthropic";
+import { google } from "@ai-sdk/google";
 
 function getAgent(board: BoardDescription, id: string): Agent | null {
     let model: LanguageModel | null = null;
     switch(id) {
+        case "o1-mini": model = openai(id); break;
         case "gpt-4o-mini": model = openai(id); break;
         case "claude-3-5-sonnet-20241022": model = anthropic(id); break;
+        case "gemini-2.0-flash-exp": model = google(id); break;
     }
     if (model) {
         return new Agent(id, model, new BoardState(board));
@@ -27,7 +30,7 @@ async function main() {
     const args = process.argv.slice(2);
     if (args.length !== 2) {
         console.error("Usage: play.js <modelA> <modelB>");
-        console.error("Available models: gpt-4o-mini, claude-3-5-sonnet-20241022");
+        console.error("Available models: gpt-4o-mini, claude-3-5-sonnet-20241022, gemini-2.0-flash-exp");
         process.exit(1);
     }
 
