@@ -40,14 +40,21 @@
 		"vite": "^6.0.0"
 	},
 	"dependencies": {
+		"@ai-sdk/anthropic": "^1.1.6",
+		"@ai-sdk/deepseek": "^0.1.8",
 		"@ai-sdk/openai": "^1.1.9",
 		"@ai-sdk/replicate": "^0.1.7",
 		"@napi-rs/canvas": "^0.1.66",
+		"@sveltejs/adapter-static": "^3.0.8",
 		"@types/node": "^22.13.1",
+		"@types/sha1": "^1.1.5",
 		"ai": "^4.1.20",
+		"canvas": "^3.1.0",
+		"immutable": "^5.0.3",
 		"lucide": "^0.474.0",
 		"lucide-svelte": "^0.474.0",
 		"three": "^0.173.0",
+		"ts-trueskill": "^5.1.0",
 		"zod": "^3.24.1"
 	},
 	"pnpm": {
