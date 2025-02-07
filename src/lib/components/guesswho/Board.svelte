@@ -1,20 +1,12 @@
 <script lang="ts">
-    import {flip} from 'svelte/animate';
 	import type { BoardDescription, PersonDescription } from "$lib/guesswho/model";
     import { Set } from "immutable";
-	import { fade, crossfade } from 'svelte/transition';
-    import { quintOut } from 'svelte/easing';
 
     export let board: BoardDescription;
     export let state: Set<string>;
     export let color: string;
     export let model: string
     export let myCard: string;
-
-    const [send, receive] = crossfade({
-        duration: 400,
-        easing: quintOut
-    });
 
     $: console.log("new state " + JSON.stringify(state));
     
@@ -44,10 +36,9 @@
         <div class="grid grid-cols-4 gap-2">
             {#each row as person (person.name)}
                 <div class="bg-white flex flex-col items-center p-1 border rounded-lg shadow hover:shadow-lg transition-shadow"
-                    animate:flip={{ duration: 3000 }}
-                    in:receive={{key: person.name}}
-                    out:send={{key: person.name}}
-                    class:opacity-25={state.has(person.name)}>
+                    
+                    class:person-removed={state.has(person.name)}
+                    class:person-active={!state.has(person.name)}>
                     <img 
                         src={"/guesswho/images/"+ person.name + ".jpg"} 
                         alt={person.name}
@@ -59,3 +50,15 @@
         </div>
     {/each}
 </div>
+
+
+<style>
+    .person-removed {
+        opacity: 0.25;
+        transition: opacity 0.4s ease;
+    }
+    .person-active {
+        opacity: 1.0;
+        transition: opacity 0.4s ease;
+    }
+</style>
