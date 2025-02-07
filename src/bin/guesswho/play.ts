@@ -26,7 +26,8 @@ async function main() {
     const gpt_4o_mini = getAgent(board, "gpt-4o-mini")!;
     const claude_3_5_sonnet = getAgent(board, "claude-3-5-sonnet-20241022")!;
 
-    const game = new GuessWho(board, claude_3_5_sonnet, gpt_4o_mini);
+    //const game = new GuessWho(board, claude_3_5_sonnet, gpt_4o_mini);
+    const game = new GuessWho(board, gpt_4o_mini, claude_3_5_sonnet);
     await game.init();
     const replay = await game.run();
     console.log(replay);

@@ -20,15 +20,17 @@
     
 </script>
 
-<div class={"grid gap-2 p-6 " + color} >
+<div class={"grid gap-2 p-2 " + color} >
     <h1 class="text-lg text-center text-black font-bold mb-4">{model}</h1>
+    <div class="flex h-40 justify-center items-center">
     <div class="w-sm bg-white flex flex-col items-center p-1 border rounded-lg shadow hover:shadow-lg transition-shadow">
         <img 
-            src={"/guesswho/"+ myCard + ".jpg"} 
+            src={"/guesswho/images/"+ myCard + ".jpg"} 
             alt={myCard}
-            class="w-full h-16 object-cover rounded-lg mb-1 object-middle"
+            class="w-full h-32 object-cover rounded-lg mb-1 object-middle"
         />
         <span class="text-black font-bold text-center text-sm">{myCard}</span>
+    </div>
     </div>
     {#each rows as row}
         <div class="grid grid-cols-4 gap-2">
@@ -36,7 +38,7 @@
                 <div class="bg-white flex flex-col items-center p-1 border rounded-lg shadow hover:shadow-lg transition-shadow"
                     class:opacity-25={state.has(person.name)}>
                     <img 
-                        src={"/guesswho/"+ person.name + ".jpg"} 
+                        src={"/guesswho/images/"+ person.name + ".jpg"} 
                         alt={person.name}
                         class="w-full h-14 object-cover rounded-lg mb-1"
                     />

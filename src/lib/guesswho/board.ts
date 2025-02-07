@@ -57,7 +57,7 @@ export class BoardState {
     }
 
     async loadImage(name: string): Promise<Image> {
-        const filename = `static/guesswho/${name}.jpg`;
+        const filename = `static/guesswho/images/${name}.jpg`;
         return await loadImage(filename);
     }
 

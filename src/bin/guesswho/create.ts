@@ -31,7 +31,7 @@ async function getBoard(): Promise<BoardDescription> {
 async function createImages(board: BoardDescription) {
     for (var person of board.people) {
         const image = await createCard(person);
-        const filename = `static/guesswho/${person.name}.jpg`;
+        const filename = `static/guesswho/images/${person.name}.jpg`;
 
         if (fs.existsSync(filename)) {
             console.log(`Image already exists: ${filename}`)

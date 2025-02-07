@@ -7,6 +7,7 @@ import type { BoardDescription, PersonDescription } from "./model";
 import { Referee } from "./referee";
 import { BoardState, type PersonState } from "./board";
 import { Agent } from "./agent";
+import { List } from "immutable";
 import crypto from "crypto";
 
 function getRandomInt(max: number): number {
@@ -32,7 +33,7 @@ export interface ReplayTurn {
     playerID: string;
     playerQuestion: string;
     refereeAnswer: boolean;
-    playerUpdatedState: PersonState[];
+    playerUpdatedState: List<PersonState>;
 }
 
 export interface Replay {
@@ -65,7 +66,7 @@ export class GuessWho {
 
         // create a referee with multiple models to vote
         this.referee = new Referee([
-            openai("gpt-4-turbo"),
+            openai("gpt-4o-mini"),
         ]);
 
         this.playerA = playerA;
@@ -87,6 +88,15 @@ export class GuessWho {
         console.log(this.playerB.id + ": CARD " + this.playerB.state.myCard);
     }
 
+    copyState(people: PersonState[]): List<PersonState> {
+        return List(people.map(person => ({
+            idx: person.idx,
+            name: person.name,
+            active: person.active,
+            image: person.image
+        })));
+    }
+
     async turn(askPlayer: Agent, ansPlayer: Agent) {
         const question = await askPlayer.chooseQuestion();
         // the referee is used for answering to avoid errors
@@ -103,7 +113,7 @@ export class GuessWho {
             playerID: askPlayer.id,
             playerQuestion: question,
             refereeAnswer: answer,
-            playerUpdatedState: askPlayer.state.board,
+            playerUpdatedState: this.copyState(askPlayer.state.board),
         };
         this.turns.push(turn);
     }

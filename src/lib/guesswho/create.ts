@@ -24,7 +24,7 @@ and the group of people should be as diverse as possible.
 `;
 
 export async function createBoardDescription(): Promise<BoardDescription> {
-    const model = openai("gpt-4-turbo");
+    const model = openai("gpt-4o-mini");
     const board = await generateObject<BoardDescription>({
         model: model,
         schema: z.object({
