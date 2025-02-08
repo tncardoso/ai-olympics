@@ -1,41 +1,48 @@
 # AI Olympics
 
+AI Olympics is a collection of unusual benchmarks designed to evaluate AI models.
 
+## Installation
 
-
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
-
-## Creating a project
-
-If you're seeing this, you've probably already done this step. Congrats!
+To install dependencies, run:
 
 ```bash
-# create a new project in the current directory
-npx sv create
-
-# create a new project in my-app
-npx sv create my-app
+pnpm install
 ```
 
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+To run the development server:
 
 ```bash
 npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
 ```
 
-## Building
+## Guess Who?
 
-To create a production version of your app:
+[Guess Who?](https://en.wikipedia.org/wiki/Guess_Who%3F) is a boardgame in which players try to guess each other chosen character. To help discovering the character, players are allowed to ask yes or no questions.
+
+### Running a Game
 
 ```bash
-npm run build
+npx tsx src/bin/guesswho/play.ts playerAModel playerBModel
 ```
 
-You can preview the production build with `npm run preview`.
+After running the game a replay file is generated in `static/guesswho/runs`. To include runs in the ranking and webpage, you need to update files.
 
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+```bash
+npx tsx src/bin/guesswho/ranking.ts
+```
+
+This will create `static/guesswho/ranking.json` and `static/guesswho/replays.json`. Those are the files used in the static webpage.
+
+### Creating a new set o characters
+
+It is possible to generate new set of characters. The following script creates descriptions and images.
+
+```bash
+npx tsx src/bin/guesswho/create.ts
+```
+
+### TODOs and Caveats
+
+- Add runs for other models.
+- After the yes-or-no questions, models update state by evaluating each character. To improve performance, use board image.
