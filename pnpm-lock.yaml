@@ -50,6 +50,9 @@ importers:
       lucide-svelte:
         specifier: ^0.474.0
         version: 0.474.0(svelte@5.19.7)
+      marked:
+        specifier: ^15.0.6
+        version: 15.0.6
       three:
         specifier: ^0.173.0
         version: 0.173.0
@@ -1308,6 +1311,11 @@ packages:
 
   magic-string@0.30.17:
     resolution: {integrity: sha512-sNPKHvyjVf7gyjwS4xGTaW/mCnF8wnjtifKBEhxfZ7E/S8tQ0rssrwGNn6q8JH/ohItJfSQp9mBtQYuTlH5QnA==}
+
+  marked@15.0.6:
+    resolution: {integrity: sha512-Y07CUOE+HQXbVDCGl3LXggqJDbXDP2pArc2C1N1RRMN0ONiShoSsIInMd5Gsxupe7fKLpgimTV+HOJ9r7bA+pg==}
+    engines: {node: '>= 18'}
+    hasBin: true
 
   mathjs@13.2.3:
     resolution: {integrity: sha512-I67Op0JU7gGykFK64bJexkSAmX498x0oybxfVXn1rroEMZTmfxppORhnk8mEUnPrbTfabDKCqvm18vJKMk2UJQ==}
@@ -3021,6 +3029,8 @@ snapshots:
   magic-string@0.30.17:
     dependencies:
       '@jridgewell/sourcemap-codec': 1.5.0
+
+  marked@15.0.6: {}
 
   mathjs@13.2.3:
     dependencies:
