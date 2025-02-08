@@ -1,11 +1,12 @@
 <script lang="ts">
+    import { base } from "$app/paths";
     import { onMount } from 'svelte';
     import { type Ranking } from '$lib/ranking';
 
     let ranking: Ranking;
 
     onMount(async () => {
-        const response = await fetch('/guesswho/ranking.json');
+        const response = await fetch(`${base}/guesswho/ranking.json`);
         ranking = await response.json();
     });
 </script>

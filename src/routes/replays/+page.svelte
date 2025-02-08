@@ -1,7 +1,8 @@
 <script lang="ts">
+    import { base } from "$app/paths";
     import type { PageProps } from "./$types";
+
     let { data }: PageProps = $props();
-    console.log(data);
 </script>
 
 <div class="mt-12">
@@ -30,7 +31,7 @@
                 {#each data!.replays as replay, idx}
                     <tr class:bg-white={idx % 2 == 0} class:bg-gray-100={idx % 2 == 1}>
                         <td class="border border-gray-300 p-2 text-center">
-                            <a class="underline text-blue-600 hover:text-blue-800 visited:text-purple-600" href={"/guesswho/" + replay.id}>{replay.date}</a></td>
+                            <a class="underline text-blue-600 hover:text-blue-800 visited:text-purple-600" href={base + "/guesswho/" + replay.id}>{replay.date}</a></td>
                         <td class="border border-gray-300 p-2">{replay.playerA}</td>
                         <td class="border border-gray-300 p-2 text-center">{replay.playerB}</td>
                         <td class="border border-gray-300 p-2 text-center">{replay.result.winner}</td>

@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { base } from "$app/paths";
 	import type { BoardDescription, PersonDescription } from "$lib/guesswho/model";
     import { Set } from "immutable";
 
@@ -25,7 +26,7 @@
     <div class="flex h-40 justify-center items-center">
     <div class="w-sm bg-white flex flex-col items-center p-1 border rounded-lg shadow hover:shadow-lg transition-shadow">
         <img 
-            src={"/guesswho/images/"+ myCard + ".jpg"} 
+            src={base + "/guesswho/images/"+ myCard + ".jpg"} 
             alt={myCard}
             class="w-full h-32 object-cover rounded-lg mb-1 object-middle"
         />
@@ -40,7 +41,7 @@
                     class:person-removed={state.has(person.name)}
                     class:person-active={!state.has(person.name)}>
                     <img 
-                        src={"/guesswho/images/"+ person.name + ".jpg"} 
+                        src={base + "/guesswho/images/"+ person.name + ".jpg"} 
                         alt={person.name}
                         class="w-full h-14 object-cover rounded-lg mb-1"
                     />
